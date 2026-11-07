@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Xmas 2026 Wishlist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap">
+<style>:root{color-scheme:light}
+/* Layout: sage masthead with lights, three tabs (Wishlist, Overview, How to use); wishlist is a filterable row list that turns into cards on phones */
+:root{
+  --bg:#f5f0e6; --surface:#ffffff; --fg:#33362f; --muted:#7c7869; --line:#e7dfcf;
+  --sage:#a9bba0; --sage-ink:#33442f; --sage-soft:#dce7d3; --accent:#5f7c55;
+  --sand:#f4e7c3; --mist:#dde6ea; --hi:#ecd2c2; --danger:#a8432f;
+  --font-display:'Bricolage Grotesque','Trebuchet MS',system-ui,sans-serif;
+  --font-body:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1b1f19; --surface:#252a22; --fg:#eef0e8; --muted:#a6ab9a; --line:#3a4034;
+  --sage:#4c6247; --sage-ink:#eaf2e4; --sage-soft:#324030; --accent:#a9c99c;
+  --sand:#4a4126; --mist:#2f3d44; --hi:#54382c; --danger:#ff9a85; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#1b1f19; --surface:#252a22; --fg:#eef0e8; --muted:#a6ab9a; --line:#3a4034;
+  --sage:#4c6247; --sage-ink:#eaf2e4; --sage-soft:#324030; --accent:#a9c99c;
+  --sand:#4a4126; --mist:#2f3d44; --hi:#54382c; --danger:#ff9a85; color-scheme:dark;}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:15px;line-height:1.45;
+  padding-block:0 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+
+header.mast{position:relative;overflow:hidden;background:var(--sage);color:var(--sage-ink);
+  margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:46px max(16px,env(safe-area-inset-left,0px)) 0}
+.mast-in{position:relative;z-index:1;max-width:1100px;margin:0 auto}
+.mast h1{font-family:var(--font-display);font-weight:800;font-size:clamp(30px,6vw,52px);line-height:1;margin:0;letter-spacing:-.02em}
+.mast p{margin:6px 0 16px;opacity:.85}
+.tabs{display:flex;gap:4px}
+.tabs button{border:0;background:transparent;padding:10px 16px;cursor:pointer;border-radius:10px 10px 0 0;font-weight:500;color:var(--sage-ink)}
+.tabs button[aria-selected=true]{background:var(--bg);font-weight:700}
+.lights{position:absolute;top:0;left:0;right:0;height:34px;display:flex;justify-content:space-between;padding:0 8px;z-index:1;pointer-events:none}
+.lights::before{content:"";position:absolute;left:-10px;right:-10px;top:-14px;height:26px;border-bottom:2px solid rgba(255,255,255,.55);border-radius:50%}
+.bulb{position:relative;top:8px;width:10px;height:15px;border-radius:50% 50% 55% 55%;background:var(--c);box-shadow:0 0 8px 1px var(--c)}
+.bulb:nth-child(odd){top:12px}
+.snow{position:absolute;inset:0;z-index:0;pointer-events:none}
+.flake{position:absolute;top:-10px;border-radius:50%;background:#fff;opacity:.7}
+@keyframes fall{to{transform:translateY(240px) translateX(var(--dx))}}
+@keyframes twinkle{0%,100%{opacity:1}50%{opacity:.5}}
+@media (prefers-reduced-motion:no-preference){.flake{animation:fall var(--d) linear var(--delay) infinite}.bulb{animation:twinkle 2.4s ease-in-out var(--t) infinite}}
+@media (prefers-reduced-motion:reduce){.flake{top:var(--y)}}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
+.panel h2{font-family:var(--font-display);font-size:18px;margin:0 0 10px;color:var(--sage-ink)}
+.day{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px 14px}
+.field{display:flex;flex-direction:column;gap:3px;min-width:0}
+.field label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.field input,.field select,.field textarea,.in{border:1px solid var(--line);background:var(--bg);border-radius:8px;padding:8px 10px;width:100%;min-width:0}
+.day .field input{border-color:transparent;background:var(--sage-soft)}
+.day .field input:disabled{opacity:1}
+
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar .in{flex:1 1 130px;max-width:220px}
+.bar .grow{flex:2 1 180px;max-width:none}
+.btn{border:0;background:var(--accent);color:#fff;border-radius:8px;padding:9px 16px;cursor:pointer;font-weight:700}
+:root[data-theme="dark"] .btn,@media (prefers-color-scheme: dark){}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line);font-weight:500}
+.btn.danger{background:transparent;color:var(--danger);border:1px solid var(--line)}
+.btn.danger.sure{background:var(--danger);color:#fff}
+.count{color:var(--muted);font-size:13px}
+
+.list{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface)}
+.head,.row{display:grid;grid-template-columns:60px minmax(0,1fr) 108px 108px 84px 124px 56px;gap:10px;align-items:center;padding:10px 14px}
+.head{background:var(--sage);color:var(--sage-ink);font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;padding-block:10px}
+.row{border-top:1px solid var(--line)}
+.row.s-Reserved{background:var(--sand)} .row.s-Purchased{background:var(--sage-soft)} .row.s-Received{background:var(--mist)}
+.ph{width:56px;height:56px;border-radius:8px;background:var(--bg);border:1px solid var(--line);object-fit:cover;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:11px}
+.main{min-width:0;display:flex;flex-direction:column;gap:3px}
+.name{font-weight:700;overflow-wrap:anywhere}
+.sub{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;font-size:13px;color:var(--muted)}
+.chip{background:var(--sage-soft);color:var(--sage-ink);border-radius:999px;padding:1px 9px;font-size:12px;font-weight:500}
+.by{font-size:12px;font-weight:700;color:var(--accent)}
+a.lnk{color:var(--accent);font-weight:500}
+.pri{font-size:12px;font-weight:500;border-radius:6px;padding:2px 8px;justify-self:start}
+.pri.High{background:var(--hi)} .pri.Medium{background:var(--sand)} .pri.Low{background:var(--bg);border:1px solid var(--line)}
+.price{font-variant-numeric:tabular-nums}
+.row select{padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface);width:100%}
+.ib{border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:13px}
+.empty{padding:28px 16px;text-align:center;color:var(--muted);background:var(--surface)}
+.lab{display:none;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+@media (max-width:760px){
+  .head{display:none}
+  .row{grid-template-columns:60px minmax(0,1fr) auto;grid-template-areas:"ph main edit" "meta meta meta" "stat stat stat";gap:8px 12px;align-items:start}
+  .row .ph{grid-area:ph} .row .main{grid-area:main} .row .ib{grid-area:edit}
+  .row .meta{grid-area:meta;display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+  .row .stat{grid-area:stat}
+  .row .cat,.row .price,.row .pri{display:inline-block}
+}
+.meta{display:contents}
+@media (max-width:760px){.meta{display:flex}}
+
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.stat-c{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.stat-c b{display:block;font-family:var(--font-display);font-size:26px;color:var(--sage-ink);line-height:1.1;font-variant-numeric:tabular-nums}
+.stat-c span{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:480px}
+th{background:var(--sage);color:var(--sage-ink);text-align:right;font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:9px 12px}
+th:first-child,td:first-child{text-align:left}
+td{padding:9px 12px;text-align:right;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+td:first-child{font-weight:700}
+.rec{display:flex;flex-direction:column}
+.rec .r{display:flex;justify-content:space-between;gap:10px;padding:10px 14px;border-top:1px solid var(--line);flex-wrap:wrap}
+.rec .r:first-child{border-top:0}
+.how{max-width:70ch}
+.how h3{font-family:var(--font-display);color:var(--sage-ink);margin:18px 0 4px;font-size:17px}
+.how p,.how li{margin:4px 0}
+.state{color:var(--muted);padding:20px 0;text-align:center}
+
+dialog{border:0;border-radius:14px;padding:0;background:var(--surface);color:var(--fg);width:min(520px,calc(100vw - 24px));max-height:calc(100vh - 24px)}
+dialog::backdrop{background:rgba(30,36,28,.5)}
+.dlg{padding:18px;display:flex;flex-direction:column;gap:10px}
+.dlg h2{font-family:var(--font-display);margin:0;color:var(--sage-ink)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:420px){.two{grid-template-columns:1fr}}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.photo-row{display:flex;gap:10px;align-items:center}
+.photo-row .ph{flex:none}
+[hidden]{display:none!important}
+
+.msg{background:var(--sage-soft);color:var(--sage-ink);border-radius:10px;padding:8px 14px;font-size:14px}
+.msg.err{background:var(--hi);color:var(--fg)}
+body{margin:0}
+@media (max-width:520px){.day{grid-template-columns:1fr 1fr;gap:8px}.panel{padding:12px}}
+</style></head><body>
+<header class="mast">
+  <div class="lights" id="lights" aria-hidden="true"></div>
+  <div class="snow" id="snow" aria-hidden="true"></div>
+  <div class="mast-in">
+    <h1>Xmas 2026 Wishlist</h1>
+    <p>Add your own wishes!</p>
+    <div class="tabs" role="tablist" id="tabs">
+      <button role="tab" id="t-list" aria-selected="true" data-tab="list">Wishlist</button>
+      <button role="tab" id="t-over" aria-selected="false" data-tab="over">Overview</button>
+      <button role="tab" id="t-how" aria-selected="false" data-tab="how">How to use</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap" style="padding-top:16px">
+  <div class="msg" id="msg" role="status" aria-live="polite" hidden></div>
+  <section id="view-list" class="wrap">
+    <section class="panel"><h2>The Day</h2><div class="day" id="event"></div></section>
+    <div class="bar">
+      <input class="in grow" id="f-q" type="search" placeholder="Search items" aria-label="Search items">
+      <select class="in" id="f-owner" aria-label="Filter by person"></select>
+      <select class="in" id="f-cat" aria-label="Filter by category"></select>
+      <select class="in" id="f-status" aria-label="Filter by status"></select>
+      <button class="btn" id="add" type="button">+ Add item</button>
+    </div>
+    <div class="count" id="count" aria-live="polite"></div>
+    <div class="state" id="state">Loading the list…</div>
+    <div class="list" id="list" hidden>
+      <div class="head"><span>Photo</span><span>Item</span><span>Category</span><span>Est. price</span><span>Priority</span><span>Status</span><span></span></div>
+      <div id="rows"></div>
+    </div>
+  </section>
+
+  <section id="view-over" class="wrap" hidden>
+    <div class="stats" id="stats"></div>
+    <h2 style="font-family:var(--font-display);margin:8px 0 0;color:var(--sage-ink)">Wishlist by family member</h2>
+    <div class="tblwrap"><table><thead><tr><th>Family member</th><th>Items</th><th>Est. value</th><th>Reserved</th><th>Purchased</th><th>Received</th></tr></thead><tbody id="bymember"></tbody></table></div>
+    <h2 style="font-family:var(--font-display);margin:8px 0 0;color:var(--sage-ink)">Recently added</h2>
+    <div class="list rec" id="recent"></div>
+  </section>
+
+  <section id="view-how" class="panel how" hidden>
+    <h2>How it works</h2>
+    <p>One shared list for the whole family. Everyone can see it, add to it and edit it. Changes show up for everyone right away.</p>
+    <h3>Add something you want</h3>
+    <ol><li>Tap <b>+ Add item</b>.</li><li>Type your name and the item name.</li><li>Fill in what you know: category, price in pesos, link, priority, a photo and notes such as size or color.</li><li>Tap <b>Save</b>.</li></ol>
+    <h3>Edit or remove an item</h3>
+    <p>Tap <b>Edit</b> on the item. Change anything and tap Save. To remove it, tap Delete and confirm. Please only delete your own items.</p>
+    <h3>Planning to buy something for someone? Reserve it</h3>
+    <ol><li>Find the item and change its Status to <b>Reserved</b>.</li><li>Type your name when asked. It shows on the item so nobody buys the same thing.</li><li>After you buy it, change Status to <b>Purchased</b>. After it has been given, change it to <b>Received</b>.</li></ol>
+    <p>Reserved items turn soft gold, Purchased soft green and Received soft blue-gray. If you see one of those, pick a different gift.</p>
+    <h3>Product link and photo</h3>
+    <p>Paste the link from Shopee, Lazada, Amazon or any shop into the Link box. To add a photo, tap Choose photo and pick a picture from your phone or computer.</p>
+    <h3>Find things fast</h3>
+    <p>Use the search box and the person, category and status menus above the list.</p>
+    <h3>New family member</h3>
+    <p>Just type a new name when adding an item. They appear in the menus and in the Overview automatically.</p>
+  </section>
+</div>
+
+<dialog id="dlg">
+  <form class="dlg" id="form" method="dialog">
+    <h2 id="dlg-title">Add item</h2>
+    <div class="two">
+      <div class="field"><label for="i-owner">Wishlist owner</label><input id="i-owner" list="owners" required maxlength="40" autocomplete="off" placeholder="Your name"><datalist id="owners"></datalist></div>
+      <div class="field"><label for="i-name">Item name</label><input id="i-name" required maxlength="140" autocomplete="off" placeholder="What do you want?"></div>
+    </div>
+    <div class="two">
+      <div class="field"><label for="i-cat">Category</label><select id="i-cat"></select></div>
+      <div class="field"><label for="i-price">Estimated price (₱)</label><input id="i-price" type="number" min="0" step="any" inputmode="decimal" placeholder="0"></div>
+    </div>
+    <div class="field"><label for="i-link">Product link</label><input id="i-link" inputmode="url" autocomplete="off" placeholder="Paste a Shopee, Lazada or Amazon link"></div>
+    <div class="two">
+      <div class="field"><label for="i-pri">Priority</label><select id="i-pri"></select></div>
+      <div class="field"><label for="i-status">Status</label><select id="i-status"></select></div>
+    </div>
+    <div class="field" id="by-field" hidden><label for="i-by" id="by-label">Reserved by</label><input id="i-by" maxlength="40" autocomplete="off" placeholder="Your name"></div>
+    <div class="field"><label>Product photo</label>
+      <div class="photo-row"><div class="ph" id="i-ph">No photo</div>
+        <div style="display:flex;flex-direction:column;gap:6px"><input id="i-file" type="file" accept="image/*" aria-label="Choose photo"><button class="ib" type="button" id="i-rmphoto" hidden>Remove photo</button></div></div></div>
+    <div class="field"><label for="i-note">Notes</label><textarea id="i-note" rows="2" maxlength="200" placeholder="Size, color, specifications"></textarea></div>
+    <div class="actions"><button class="btn" type="submit" id="i-save">Save</button><button class="btn ghost" type="button" id="i-cancel">Cancel</button><button class="btn danger" type="button" id="i-del" hidden>Delete</button></div>
+  </form>
+</dialog>
+<script>
+(function(){
+  // 1) After you deploy the Google Apps Script, paste its Web app URL between the quotes below.
+  var API_URL='https://script.google.com/macros/s/AKfycbyk4h-w9EaagN005melx1s5jPunWs-4RH5QXOx-mScVsuHRYUUb8NqamjFJmybIe4q3/exec';
+  var SEED=[{"id": "al01", "owner": "Alby", "item": "Wrist band pang pikol", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al02", "owner": "Alby", "item": "Medjas", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al03", "owner": "Alby", "item": "Brief", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al04", "owner": "Alby", "item": "Drifit na shirt and short", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al05", "owner": "Alby", "item": "Shirt panglakaw", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al06", "owner": "Alby", "item": "Pants", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al07", "owner": "Alby", "item": "Shorts", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al08", "owner": "Alby", "item": "Anything pang pikol", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al09", "owner": "Alby", "item": "Dawat rapud kog cash", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al10", "owner": "Alby", "item": "Pillow", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al11", "owner": "Alby", "item": "Windbreaker", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "al12", "owner": "Alby", "item": "Balaclava", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bd01", "owner": "Bdal", "item": "Owala cute design or purple 40oz", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bd02", "owner": "Bdal", "item": "Jewelry box", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bd03", "owner": "Bdal", "item": "Paddle cover", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bd04", "owner": "Bdal", "item": "Bifold wallet", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "black, cream or gray", "photo": ""}, {"id": "ei01", "owner": "Eila", "item": "Any cute plushie / stuffed toy", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ei02", "owner": "Eila", "item": "2027 planner", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ei03", "owner": "Eila", "item": "Pajama set", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ei04", "owner": "Eila", "item": "Arm / leg weights", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ei05", "owner": "Eila", "item": "House slippers", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ei06", "owner": "Eila", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=XyZTU7o48S", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "blue", "photo": ""}, {"id": "ei07", "owner": "Eila", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=9PySHE6Vvw", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ei08", "owner": "Eila", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=3tatNDHtQp", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "pa01", "owner": "Patti", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=4nJAN2edeE", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "small", "photo": ""}, {"id": "pa02", "owner": "Patti", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=9g8ZCqUxgW", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "small", "photo": ""}, {"id": "pa03", "owner": "Patti", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=ILv2yUZpQf", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "small", "photo": ""}, {"id": "pa04", "owner": "Patti", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=dLGur2LyFm", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "medium", "photo": ""}, {"id": "pa05", "owner": "Patti", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=DbCyYbt9BN", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "small", "photo": ""}, {"id": "pa06", "owner": "Patti", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=jYR5ZupLq4", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "size 36", "photo": ""}, {"id": "ys01", "owner": "Ysla", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=AW0eMjeN3V", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ys02", "owner": "Ysla", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=0h8qYxZXDF", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ys03", "owner": "Ysla", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=KM1SlZbab5", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ys04", "owner": "Ysla", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=10ecLkAQgs", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "na01", "owner": "Naiea", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=R2gJJrUep6", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "200 balls + mat", "photo": ""}, {"id": "na02", "owner": "Naiea", "item": "Swimsuit", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "rash guard", "photo": ""}, {"id": "na03", "owner": "Naiea", "item": "Baby toys", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "na04", "owner": "Naiea", "item": "Dress / outfits", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "jo01", "owner": "Jot", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=bOzPjRlee2", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "jo02", "owner": "Jot", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=bVw7BykRtD", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "jo03", "owner": "Jot", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=zNKiPqHWWj", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "jo04", "owner": "Jot", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=6DfEHNq1r7", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "jo05", "owner": "Jot", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=7yaV6VTg3O", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "jo06", "owner": "Jot", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=0AqsOoa7UV", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "jo07", "owner": "Jot", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=gblm86Zf8r", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "xz01", "owner": "Xzian", "item": "Robux", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "xz02", "owner": "Xzian", "item": "Needoh", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "white", "photo": ""}, {"id": "xz03", "owner": "Xzian", "item": "Owala", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "Spiderman design", "photo": ""}, {"id": "xz04", "owner": "Xzian", "item": "Fur blanket", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bn01", "owner": "Bon & Novie", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=TnYaZvB5qN", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bn02", "owner": "Bon & Novie", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=qg48UjqmsI", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bn03", "owner": "Bon & Novie", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=obT7crFBy1", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bn04", "owner": "Bon & Novie", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=TJhH1cnnwd", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bn05", "owner": "Bon & Novie", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=xsFrAmMc8n", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bn06", "owner": "Bon & Novie", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=iG8OogFWw6", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bn07", "owner": "Bon & Novie", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=rWkqg4SYFV", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "bn08", "owner": "Bon & Novie", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=l78X5Vv3mN", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "la01", "owner": "Latris", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=2MV0ewDRtC", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "la02", "owner": "Latris", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=NfHsYm0mtz", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "black", "photo": ""}, {"id": "la03", "owner": "Latris", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=5Kgn459iIo", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "la04", "owner": "Latris", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=JUbs5TGegP", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "dark blue", "photo": ""}, {"id": "la05", "owner": "Latris", "item": "iPhone adaptor", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "la06", "owner": "Latris", "item": "iPhone lightning connector earphones", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ph01", "owner": "Latris", "item": "iPhone 13 phone case", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=ybn99DG3w6", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "all blue (2nd option)", "photo": ""}, {"id": "ph02", "owner": "Latris", "item": "iPhone 13 phone case", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=oj9DfID1sH", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "red and brown", "photo": ""}, {"id": "ch01", "owner": "Chokie", "item": "Coffee mug #1", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=HYxnUTqNBS", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch02", "owner": "Chokie", "item": "Coffee mug #2", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=X5N3XhFCky", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch03", "owner": "Chokie", "item": "Coffee mug #3", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=P4Zcv85jO0", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch04", "owner": "Chokie", "item": "Coaster #1", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=WSoDoOzS1E", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch05", "owner": "Chokie", "item": "Coaster #2", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=bU5ahqGQoW", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch06", "owner": "Chokie", "item": "Mat", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=IczH0YC2vZ", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch07", "owner": "Chokie", "item": "Trash can #1", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=513agl5TfY", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch08", "owner": "Chokie", "item": "Trash can #2", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=Joiq3SdK1p", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch09", "owner": "Chokie", "item": "Trash can #3", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=3EPop6Um2t", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch10", "owner": "Chokie", "item": "Keycaps #1", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods.html?ps=Ef0XVM78Lc", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch11", "owner": "Chokie", "item": "Keycaps #2", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=F9p98OJvK2", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "ch12", "owner": "Chokie", "item": "Keycaps #3", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods2.html?ps=NAlpAmp6Tm", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "an01", "owner": "Andrea", "item": "Cute comfy pajama", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "an02", "owner": "Andrea", "item": "Pickleball clothes", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "medium", "photo": ""}, {"id": "an03", "owner": "Andrea", "item": "Nike socks", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "an04", "owner": "Andrea", "item": "iPad A16 case", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "an05", "owner": "Andrea", "item": "Hair claw clips", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "an06", "owner": "Andrea", "item": "Cash", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "an07", "owner": "Andrea", "item": "Item (see link)", "category": "", "price": 0, "link": "https://mobile.yangkeduo.com/goods1.html?ps=u0QnycLDo8", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "bright silver", "photo": ""}, {"id": "zi01", "owner": "Zillian", "item": "Type C wired earphones", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "zi02", "owner": "Zillian", "item": "iPhone 15 Pro Max phone cases", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "zi03", "owner": "Zillian", "item": "Cute tops", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "xs/s", "photo": ""}, {"id": "zi04", "owner": "Zillian", "item": "Cute dresses", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "xs/s", "photo": ""}, {"id": "zo01", "owner": "Zoey", "item": "iPhone 12 Pro cute cases", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "zo02", "owner": "Zoey", "item": "Barenbliss makeup", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "zo03", "owner": "Zoey", "item": "Pusheen cat plushie", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "zo04", "owner": "Zoey", "item": "Cute clothes", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "M/L", "photo": ""}, {"id": "xa01", "owner": "Xandie", "item": "Digital kitchen scale", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "xa02", "owner": "Xandie", "item": "Miffy thermal lunch box", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "xa03", "owner": "Xandie", "item": "Peppermint scent candle", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}, {"id": "xa04", "owner": "Xandie", "item": "Money", "category": "", "price": 0, "link": "", "priority": "", "status": "Wishlist", "by": "", "added": 1793980800000, "notes": "", "photo": ""}], SEED_DAY={"venue": "Patti's house", "lechon": "Eila / Pam", "sweets": "Bdal", "outfit": "Casual, burgundy color", "wrapper": "Burgundy"};
+  var CATS=['Electronics','Clothing','Beauty','Home','Toys','Travel','Food','Experiences','Other'];
+  var PRIS=['Low','Medium','High'], STATS=['Wishlist','Reserved','Purchased','Received'];
+  var EVENT_FIELDS=[['venue','Venue'],['lechon','Lechon'],['sweets','Buko pandan or sweets'],['outfit','Outfit'],['wrapper','Gift wrapper']];
+  var live=/^https:\/\/script\.google\.com\/macros\/s\//.test(API_URL);
+  var items=[],event={},editing=null,photoData='',busy=0,ownerRank={};
+  var f={q:'',owner:'',cat:'',status:''};
+  var $=function(id){return document.getElementById(id)};
+  function el(t,p,k){var e=document.createElement(t);for(var a in (p||{})){if(a==='class')e.className=p[a];else if(a==='text')e.textContent=p[a];else e.setAttribute(a,p[a])}(k||[]).forEach(function(c){if(c)e.appendChild(c)});return e}
+  function peso(n){return '₱'+(Number(n)||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function dstr(ms){return new Date(ms).toLocaleDateString('en-PH',{month:'short',day:'numeric',year:'numeric'})}
+  function safeUrl(u){u=String(u||'').trim();if(!u)return '';if(!/^https?:\/\//i.test(u))u='https://'+u;try{var x=new URL(u);return(x.protocol==='http:'||x.protocol==='https:')?x.href:''}catch(e){return ''}}
+  function host(u){try{return new URL(u).hostname.replace(/^(mobile|www)\./,'')}catch(e){return 'link'}}
+  function say(t,err){var m=$('msg');if(!t){m.hidden=true;return}m.hidden=false;m.className='msg'+(err?' err':'');m.textContent=t}
+  function fillSelect(sel,first,opts){sel.innerHTML='';if(first!==null)sel.appendChild(el('option',{value:'',text:first}));opts.forEach(function(o){sel.appendChild(el('option',{value:o,text:o}))})}
+  function norm(d){return{id:String(d.id),owner:String(d.owner||''),name:String(d.item||''),note:String(d.notes||''),link:String(d.link||''),category:String(d.category||''),
+    price:Number(d.price)||0,priority:String(d.priority||''),status:d.status||'Wishlist',photo:String(d.photo||''),by:String(d.by||''),added:(typeof d.added==='string'&&isNaN(Number(d.added))?Date.parse(d.added):Number(d.added))||0}}
+  function ownersInOrder(){var seen={},out=[];items.forEach(function(i){var k=i.owner.trim().toLowerCase();if(k&&!seen[k]){seen[k]=1;out.push(i.owner.trim())}});return out}
+
+  // ---------- talking to the Google Sheet
+  function post(body){busy++;say('Saving…');
+    return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)})
+      .then(function(r){return r.json()}).then(function(j){if(!j.ok)throw new Error(j.error||'Could not save');busy--;return j})
+      .catch(function(e){busy--;say('Could not save that. Check your connection and try again.',true);throw e})}
+  function load(){return fetch(API_URL+(API_URL.indexOf('?')<0?'?':'&')+'action=list&t='+Date.now()).then(function(r){return r.json()})
+    .then(function(j){if(!j.ok)throw new Error(j.error);items=j.items.map(norm);event=j.day||{};renderAll();if(!busy)say('')})}
+  function afterWrite(){return load().catch(function(){})}
+
+  // ---------- list
+  function matches(i){
+    if(f.owner&&i.owner.trim().toLowerCase()!==f.owner.toLowerCase())return false;
+    if(f.cat&&i.category!==f.cat)return false;
+    if(f.status&&i.status!==f.status)return false;
+    if(f.q){var q=f.q.toLowerCase();if((i.name+' '+i.note+' '+i.owner+' '+i.by).toLowerCase().indexOf(q)<0)return false}
+    return true}
+  function rowEl(i){
+    var ph=i.photo?el('img',{class:'ph',src:i.photo,alt:''}):el('div',{class:'ph',text:'—'});
+    var sub=el('div',{class:'sub'},[el('span',{class:'chip',text:i.owner})]);
+    if(i.note)sub.appendChild(el('span',{text:i.note}));
+    var sl=safeUrl(i.link);if(sl)sub.appendChild(el('a',{class:'lnk',href:sl,target:'_blank',rel:'noopener noreferrer',text:'Open link · '+host(sl)}));
+    var main=el('div',{class:'main'},[el('span',{class:'name',text:i.name}),sub]);
+    if(i.status!=='Wishlist'&&i.by)main.appendChild(el('span',{class:'by',text:i.status+' by '+i.by}));
+    var meta=el('div',{class:'meta'},[el('span',{class:'cat',text:i.category||'—'}),el('span',{class:'price',text:i.price?peso(i.price):'—'}),
+      i.priority?el('span',{class:'pri '+i.priority,text:i.priority}):el('span',{class:'pri',text:'—'})]);
+    var sel=el('select',{class:'stat','aria-label':'Status of '+i.name});fillSelect(sel,null,STATS);sel.value=i.status;sel.disabled=!live;
+    sel.addEventListener('change',function(){
+      if(sel.value!=='Wishlist'&&!i.by){openForm(i,sel.value);sel.value=i.status;return}
+      var v=sel.value;i.status=v;renderAll();post({action:'update',id:i.id,fields:{status:v}}).then(afterWrite).catch(afterWrite)});
+    var eb=el('button',{class:'ib',type:'button',text:'Edit'});eb.disabled=!live;eb.addEventListener('click',function(){openForm(i)});
+    return el('div',{class:'row s-'+i.status},[ph,main,meta,sel,eb]);
+  }
+  function renderList(){
+    var shown=items.map(function(i,n){return{i:i,n:n}}).filter(function(x){return matches(x.i)}).sort(function(a,b){
+      return (ownerRank[a.i.owner.trim().toLowerCase()]||0)-(ownerRank[b.i.owner.trim().toLowerCase()]||0)||a.n-b.n}).map(function(x){return x.i});
+    var rows=$('rows');rows.innerHTML='';shown.forEach(function(i){rows.appendChild(rowEl(i))});
+    $('count').textContent=shown.length+(shown.length===1?' item':' items')+(shown.length!==items.length?' (filtered from '+items.length+')':'');
+    $('state').hidden=true;$('list').hidden=false;
+    if(!shown.length)rows.appendChild(el('div',{class:'empty',text:items.length?'No items match. Clear a filter to see more.':'No wishes yet. Tap + Add item to start the list.'}));
+  }
+  function refreshFilters(){
+    var owners=ownersInOrder();ownerRank={};owners.forEach(function(o,n){ownerRank[o.toLowerCase()]=n+1});
+    var cur=f.owner.toLowerCase();fillSelect($('f-owner'),'Everyone',owners);
+    var keep=owners.filter(function(o){return o.toLowerCase()===cur})[0]||'';$('f-owner').value=keep;f.owner=keep;
+    var dl=$('owners');dl.innerHTML='';owners.forEach(function(o){dl.appendChild(el('option',{value:o}))});
+  }
+  function renderOverview(){
+    var tot=items.length,val=items.reduce(function(s,i){return s+i.price},0),c={};STATS.forEach(function(s){c[s]=items.filter(function(i){return i.status===s}).length});
+    var st=$('stats');st.innerHTML='';
+    [[tot,'Total items'],[peso(val),'Est. total value'],[c.Wishlist,'Still wished for'],[c.Reserved,'Reserved'],[c.Purchased,'Purchased'],[c.Received,'Received']].forEach(function(x){
+      st.appendChild(el('div',{class:'stat-c'},[el('b',{text:String(x[0])}),el('span',{text:x[1]})]))});
+    var tb=$('bymember');tb.innerHTML='';
+    ownersInOrder().forEach(function(o){
+      var mine=items.filter(function(i){return i.owner.trim().toLowerCase()===o.toLowerCase()});
+      function n(s){return mine.filter(function(i){return i.status===s}).length}
+      tb.appendChild(el('tr',{},[el('td',{text:o}),el('td',{text:String(mine.length)}),el('td',{text:peso(mine.reduce(function(s,i){return s+i.price},0))}),el('td',{text:String(n('Reserved'))}),el('td',{text:String(n('Purchased'))}),el('td',{text:String(n('Received'))})]))});
+    var rec=items.map(function(i,n){return{i:i,n:n}}).sort(function(a,b){return (b.i.added||0)-(a.i.added||0)||b.n-a.n}).slice(0,10),r=$('recent');r.innerHTML='';
+    rec.forEach(function(x){var i=x.i;r.appendChild(el('div',{class:'r',style:'background:'+({Reserved:'var(--sand)',Purchased:'var(--sage-soft)',Received:'var(--mist)'}[i.status]||'transparent')},[
+      el('span',{},[el('b',{text:i.name}),el('span',{class:'count',text:'  ·  '+i.owner})]),el('span',{class:'count',text:(i.price?peso(i.price)+'  ·  ':'')+i.status+(i.added?'  ·  '+dstr(i.added):'')})]))});
+  }
+  function renderAll(){refreshFilters();renderList();if(!$('view-over').hidden)renderOverview();fillEvent()}
+
+  // ---------- form
+  var dlg=$('dlg');
+  function setPhoto(d){photoData=d||'';var p=$('i-ph');p.innerHTML='';
+    if(photoData)p.appendChild(el('img',{src:photoData,alt:'',style:'width:100%;height:100%;object-fit:cover;border-radius:8px'}));else p.textContent='No photo';
+    $('i-rmphoto').hidden=!photoData}
+  function syncBy(){var s=$('i-status').value;$('by-field').hidden=(s==='Wishlist');$('by-label').textContent=(s==='Wishlist'?'':s)+' by'}
+  function openForm(i,forceStatus){
+    if(!live)return;editing=i||null;$('dlg-title').textContent=i?'Edit item':'Add item';
+    $('i-owner').value=i?i.owner:(f.owner||'');$('i-name').value=i?i.name:'';$('i-cat').value=i?i.category:'';
+    $('i-price').value=i&&i.price?i.price:'';$('i-link').value=i?i.link:'';$('i-pri').value=i?i.priority:'';
+    $('i-status').value=forceStatus||(i?i.status:'Wishlist');$('i-by').value=i?i.by:'';$('i-note').value=i?i.note:'';
+    $('i-file').value='';setPhoto(i?i.photo:'');syncBy();
+    $('i-del').hidden=!i;$('i-del').classList.remove('sure');$('i-del').textContent='Delete';
+    dlg.showModal();setTimeout(function(){(forceStatus?$('i-by'):$(i?'i-name':'i-owner')).focus()},30)}
+  function resize(file){return new Promise(function(res,rej){var fr=new FileReader();fr.onload=function(){var im=new Image();im.onload=function(){
+    var m=220,s=Math.min(1,m/Math.max(im.width,im.height)),cv=document.createElement('canvas');cv.width=Math.round(im.width*s);cv.height=Math.round(im.height*s);
+    var cx=cv.getContext('2d');cx.fillStyle='#fff';cx.fillRect(0,0,cv.width,cv.height);cx.drawImage(im,0,0,cv.width,cv.height);res(cv.toDataURL('image/jpeg',0.65))};im.onerror=rej;im.src=fr.result};fr.onerror=rej;fr.readAsDataURL(file)})}
+  $('i-file').addEventListener('change',function(){var fl=this.files&&this.files[0];if(!fl)return;resize(fl).then(setPhoto).catch(function(){})});
+  $('i-rmphoto').addEventListener('click',function(){$('i-file').value='';setPhoto('')});
+  $('i-status').addEventListener('change',syncBy);
+  $('i-cancel').addEventListener('click',function(){dlg.close()});
+  $('i-del').addEventListener('click',function(){var b=$('i-del');if(!b.classList.contains('sure')){b.classList.add('sure');b.textContent='Tap again to delete';return}
+    var id=editing.id;items=items.filter(function(x){return x.id!==id});renderAll();dlg.close();post({action:'delete',id:id}).then(afterWrite).catch(afterWrite)});
+  $('form').addEventListener('submit',function(e){e.preventDefault();
+    var owner=$('i-owner').value.trim(),name=$('i-name').value.trim();if(!owner||!name)return;
+    var status=$('i-status').value,by=$('i-by').value.trim();
+    var data={owner:owner,item:name,category:$('i-cat').value,price:parseFloat($('i-price').value)||0,link:safeUrl($('i-link').value),
+      priority:$('i-pri').value,status:status,by:status==='Wishlist'?'':by,notes:$('i-note').value.trim(),photo:photoData};
+    dlg.close();
+    if(editing){var t=editing;t.owner=owner;t.name=name;t.category=data.category;t.price=data.price;t.link=data.link;t.priority=data.priority;t.status=status;t.by=data.by;t.note=data.notes;t.photo=photoData;renderAll();
+      post({action:'update',id:t.id,fields:data}).then(afterWrite).catch(afterWrite)}
+    else{items.push(norm(Object.assign({id:'tmp'+Date.now(),added:Date.now()},data)));renderAll();post({action:'add',item:data}).then(afterWrite).catch(afterWrite)}});
+  $('add').addEventListener('click',function(){openForm(null)});
+
+  // ---------- The Day
+  function buildEvent(){var box=$('event');box.innerHTML='';
+    EVENT_FIELDS.forEach(function(x){var inp=el('input',{id:'ev-'+x[0],type:'text',maxlength:'120',autocomplete:'off'});inp.disabled=!live;
+      inp.addEventListener('change',function(){event[x[0]]=inp.value.trim();post({action:'day',key:x[0],value:inp.value.trim()}).catch(function(){})});
+      box.appendChild(el('div',{class:'field'},[el('label',{for:'ev-'+x[0],text:x[1]}),inp]))})}
+  function fillEvent(){EVENT_FIELDS.forEach(function(x){var i=$('ev-'+x[0]);if(i&&document.activeElement!==i)i.value=event[x[0]]||''})}
+
+  // ---------- tabs and filters
+  var tabs=document.querySelectorAll('#tabs button');
+  tabs.forEach(function(b){b.addEventListener('click',function(){
+    tabs.forEach(function(x){x.setAttribute('aria-selected',x===b?'true':'false')});
+    ['list','over','how'].forEach(function(t){$('view-'+t).hidden=(t!==b.dataset.tab)});
+    if(b.dataset.tab==='over')renderOverview()})});
+  $('f-q').addEventListener('input',function(){f.q=this.value.trim();renderList()});
+  $('f-owner').addEventListener('change',function(){f.owner=this.value;renderList()});
+  $('f-cat').addEventListener('change',function(){f.cat=this.value;renderList()});
+  $('f-status').addEventListener('change',function(){f.status=this.value;renderList()});
+  fillSelect($('f-cat'),'All categories',CATS);fillSelect($('f-status'),'All statuses',STATS);fillSelect($('f-owner'),'Everyone',[]);
+  fillSelect($('i-cat'),'Choose…',CATS);fillSelect($('i-pri'),'Choose…',PRIS);fillSelect($('i-status'),null,STATS);
+
+  // ---------- decor
+  (function(){var colors=['#ffd36b','#ffffff','#ff9bb3','#fff1d6','#8fc7ff','#c53b4a'],L=$('lights'),S=$('snow');
+    for(var i=0;i<28;i++){var b=el('span',{class:'bulb'});b.style.setProperty('--c',colors[i%colors.length]);b.style.setProperty('--t',(i%7)*0.35+'s');L.appendChild(b)}
+    for(var j=0;j<30;j++){var fl=el('span',{class:'flake'}),s=2+Math.random()*4;fl.style.cssText='left:'+(Math.random()*100)+'%;width:'+s+'px;height:'+s+'px';
+      fl.style.setProperty('--d',(5+Math.random()*7)+'s');fl.style.setProperty('--delay','-'+(Math.random()*10)+'s');fl.style.setProperty('--dx',(Math.random()*40-20)+'px');fl.style.setProperty('--y',(Math.random()*80)+'%');S.appendChild(fl)}})();
+
+  // ---------- start
+  buildEvent();
+  items=SEED.map(norm);event=SEED_DAY;renderAll();
+  $('add').disabled=!live;
+  if(!live){say('Viewing a saved copy of the list. Adding and editing turn on once the site is connected to its Google Sheet.')}
+  else{
+    say('Loading the latest list…');
+    load().catch(function(){say('Could not reach the shared list. Showing a saved copy; try refreshing.',true);$('add').disabled=true});
+    setInterval(function(){if(!dlg.open&&!busy&&!document.hidden)load().catch(function(){})},30000);
+  }
+})();
+</script></body></html>
